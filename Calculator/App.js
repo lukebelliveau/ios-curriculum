@@ -14,6 +14,7 @@ export default class App extends React.Component {
 
     this.enterConstant = this.enterConstant.bind(this);
     this.binaryOperation = this.binaryOperation.bind(this);
+    this.clear = this.clear.bind(this);
 
     this.calculatorButtons = [
       [
@@ -35,12 +36,20 @@ export default class App extends React.Component {
         { value: 9, action: this.enterConstant },
       ],
       [
-        { value: '', action: () => {} },
+        { value: 'C', action: this.clear },
         { value: '+', action: this.binaryOperation },
-        { value: '-', action: () => Alert.alert('9') },
+        { value: '-', action: this.binaryOperation },
         { value: '=', action: this.binaryOperation },
       ],
     ];
+  }
+
+  clear() {
+    this.setState({
+      displayText: '',
+      pendingBinaryOperation: null,
+      accumulator: 0,
+    })
   }
 
   enterConstant(constant) {
