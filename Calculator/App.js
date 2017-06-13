@@ -18,27 +18,27 @@ export default class App extends React.Component {
 
     this.calculatorButtons = [
       [
-        { value: 'C', action: this.clear },
-        { value: 1, action: this.enterConstant },
-        { value: 2, action: this.enterConstant },
-        { value: 3, action: this.enterConstant },
-      ],
-      [
-        { value: '', action: () => {} },
-        { value: 4, action: this.enterConstant },
-        { value: 5, action: this.enterConstant },
-        { value: 6, action: this.enterConstant },
-      ],
-      [
-        { value: '', action: () => {} },
+        { value: '+', action: this.clear },
         { value: 7, action: this.enterConstant },
         { value: 8, action: this.enterConstant },
         { value: 9, action: this.enterConstant },
       ],
       [
-        { value: '*', action: this.binaryOperation },
-        { value: '+', action: this.binaryOperation },
         { value: '-', action: this.binaryOperation },
+        { value: 4, action: this.enterConstant },
+        { value: 5, action: this.enterConstant },
+        { value: 6, action: this.enterConstant },
+      ],
+      [
+        { value: '*', action: this.binaryOperation },
+        { value: 1, action: this.enterConstant },
+        { value: 2, action: this.enterConstant },
+        { value: 3, action: this.enterConstant },
+      ],
+      [
+        { value: '/', action: this.binaryOperation },
+        { value: 'C', action: this.clear },
+        { value: '0', action: this.enterConstant },
         { value: '=', action: this.binaryOperation },
       ],
     ];
@@ -61,19 +61,13 @@ export default class App extends React.Component {
   binaryOperation(operator) {
     switch(operator) {
       case '+':
-        this.setState((prevState) => {
-          const valueOfInput = parseInt(prevState.displayText);
-          return {
-            pendingBinaryOperation: (op2) => add(valueOfInput, op2),
-            accumulator: valueOfInput,
-          }
-        });
-        break;
       case '-':
+      case '*':
+      case '/':
         this.setState((prevState) => {
           const valueOfInput = parseInt(prevState.displayText);
           return {
-            pendingBinaryOperation: (op2) => subtract(valueOfInput, op2),
+            pendingBinaryOperation: (op2) => operations[operator](valueOfInput, op2),
             accumulator: valueOfInput,
           }
         });
@@ -97,10 +91,12 @@ export default class App extends React.Component {
   }
 };
 
-const add = (op1, op2) => op1 + op2;
-const subtract = (op1, op2) => op1 - op2;
-const multiply = (op1, op2) => op1 * op2;
-const divide = (op1, op2) => op1 / op2;
+const operations = {
+  '+': (op1, op2) => op1 + op2,
+  '-': (op1, op2) => op1 - op2,
+  '*': (op1, op2) => op1 * op2,
+  '/': (op1, op2) => op1 / op2
+};
 
 const Display = ({ text }) => (
   <Text style={ styles.display }>{ text }</Text>
