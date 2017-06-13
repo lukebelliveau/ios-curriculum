@@ -18,7 +18,7 @@ export default class App extends React.Component {
 
     this.calculatorButtons = [
       [
-        { value: '+', action: this.clear },
+        { value: '+', action: this.binaryOperation },
         { value: 7, action: this.enterConstant },
         { value: 8, action: this.enterConstant },
         { value: 9, action: this.enterConstant },

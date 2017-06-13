@@ -20,10 +20,12 @@ const KeypadRow = ({ buttonRow }) => (
 const CalculatorButton = ({ buttonData }) => (
   <View style={ styles.keySpace }>
     <TouchableHighlight style={{ height: '90%', width: '90%'}} onPress={ () => buttonData.action(buttonData.value) }>
-      <Text style={ styles.keyContent }>{ buttonData.value }</Text>
+      <Text style={ [styles.keyContent, { backgroundColor: computeButtonColor(buttonData.value) }] }>{ buttonData.value }</Text>
     </TouchableHighlight>
   </View>
 );
+
+const computeButtonColor = value => isNaN(parseInt(value)) ? 'orangered' : 'lightslategrey';
 
 const styles = StyleSheet.create({
   container: {
@@ -31,11 +33,10 @@ const styles = StyleSheet.create({
   keyRow: {
     flex: 1,
     flexDirection: 'row',
-    backgroundColor: 'gainsboro',
   },
   keySpace: {
     flex: 1,
-    backgroundColor: 'gray',
+    backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -45,7 +46,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     textAlignVertical: 'center',
     fontSize: 25,
-    backgroundColor: 'white',
+    color: 'white'
   }
 });
 
