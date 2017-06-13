@@ -18,7 +18,7 @@ export default class App extends React.Component {
 
     this.calculatorButtons = [
       [
-        { value: '', action: () => {} },
+        { value: 'C', action: this.clear },
         { value: 1, action: this.enterConstant },
         { value: 2, action: this.enterConstant },
         { value: 3, action: this.enterConstant },
@@ -36,7 +36,7 @@ export default class App extends React.Component {
         { value: 9, action: this.enterConstant },
       ],
       [
-        { value: 'C', action: this.clear },
+        { value: '*', action: this.binaryOperation },
         { value: '+', action: this.binaryOperation },
         { value: '-', action: this.binaryOperation },
         { value: '=', action: this.binaryOperation },
@@ -69,6 +69,15 @@ export default class App extends React.Component {
           }
         });
         break;
+      case '-':
+        this.setState((prevState) => {
+          const valueOfInput = parseInt(prevState.displayText);
+          return {
+            pendingBinaryOperation: (op2) => subtract(valueOfInput, op2),
+            accumulator: valueOfInput,
+          }
+        });
+        break;
       case '=':
         this.setState((prevState) => ({
           displayText: prevState.pendingBinaryOperation(parseInt(prevState.displayText)),
@@ -89,6 +98,9 @@ export default class App extends React.Component {
 };
 
 const add = (op1, op2) => op1 + op2;
+const subtract = (op1, op2) => op1 - op2;
+const multiply = (op1, op2) => op1 * op2;
+const divide = (op1, op2) => op1 / op2;
 
 const Display = ({ text }) => (
   <Text style={ styles.display }>{ text }</Text>
