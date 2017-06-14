@@ -7,6 +7,7 @@ import getButtons from './src/getButtons';
 const initialState = {
   displayText: '',
   description: '',
+  lastClause: '',
   pendingBinaryOperation: null,
   accumulator: 0,
   isFloatingPoint: false,
@@ -45,7 +46,8 @@ export default class App extends React.Component {
   enterConstant(constant) {
     this.setState((prevState) => ({
       displayText: prevState.displayText + constant.toString(),
-      description: prevState.description + constant.toString(),
+      lastClause: constant.toString(),
+      // description: prevState.description + constant.toString(),
     }))
   }
 
@@ -64,16 +66,21 @@ export default class App extends React.Component {
             pendingBinaryOperation: (op2) => operations[operator](valueOfInput, op2),
             accumulator: valueOfInput,
             displayText: '',
-            description: prevState.description + operator,
+            description: prevState.lastClause + operator,
           }
         });
         break;
       case '=':
         if(!(this.state.pendingBinaryOperation)) break;
-        this.setState((prevState) => ({
-          displayText: prevState.pendingBinaryOperation(parseFloat(prevState.displayText)),
-          pendingBinaryOperation: null,
-        }));
+        this.setState((prevState) => {
+          const newDescription = prevState.description + prevState.lastClause;
+          return ({
+            displayText: prevState.pendingBinaryOperation(parseFloat(prevState.displayText)),
+            description: newDescription,
+            lastClause: newDescription,
+            pendingBinaryOperation: null,
+          })
+        });
         break;
     }
   }
