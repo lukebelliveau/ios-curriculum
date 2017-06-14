@@ -2,12 +2,18 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import Keypad from './src/Keypad';
+import getButtons from './src/getButtons';
 
 const initialState = {
   displayText: '',
+  description: '',
   pendingBinaryOperation: null,
   accumulator: 0,
   isFloatingPoint: false,
+};
+
+const descriptionSuffix = (pendingBinaryOperation) => {
+  return pendingBinaryOperation === null ? '=' : '...';
 };
 
 export default class App extends React.Component {
@@ -20,7 +26,7 @@ export default class App extends React.Component {
     this.enterFloatingPoint = this.enterFloatingPoint.bind(this);
     this.clear = this.clear.bind(this);
 
-    this.calculatorButtons = getButtons(this.enterConstant, this.enterFloatingPoint, this.binaryOperation)
+    this.calculatorButtons = getButtons(this.enterConstant, this.enterFloatingPoint, this.binaryOperation, this.clear)
   }
 
   clear() {
@@ -28,17 +34,18 @@ export default class App extends React.Component {
   }
 
   enterFloatingPoint() {
-    console.log(this.state);
     if(this.state.isFloatingPoint) return;
     this.setState((prevState) => ({
       isFloatingPoint: true,
       displayText: prevState.displayText + '.',
+      description: prevState.description + '.',
     }));
   }
 
   enterConstant(constant) {
     this.setState((prevState) => ({
-      displayText: prevState.displayText + constant.toString()
+      displayText: prevState.displayText + constant.toString(),
+      description: prevState.description + constant.toString(),
     }))
   }
 
@@ -57,6 +64,7 @@ export default class App extends React.Component {
             pendingBinaryOperation: (op2) => operations[operator](valueOfInput, op2),
             accumulator: valueOfInput,
             displayText: '',
+            description: prevState.description + operator,
           }
         });
         break;
@@ -73,7 +81,8 @@ export default class App extends React.Component {
   render() {
     return (
       <View style={ styles.container }>
-        <Display text={ this.state.displayText } />
+        <Text style={ styles.main }>{ this.state.displayText }</Text>
+        <Text style={ styles.description }>{ this.state.description + descriptionSuffix(this.state.pendingBinaryOperation) }</Text>
         <Keypad buttonGrid={ this.calculatorButtons } style={ styles.keypad } />
       </View>
     );
@@ -87,56 +96,27 @@ const operations = {
   '/': (op1, op2) => op1 / op2
 };
 
-const Display = ({ text }) => (
-  <Text style={ styles.display }>{ text }</Text>
-);
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  display: {
-    flex: 1,
+  main: {
+    flex: 2,
     color: 'white',
     backgroundColor: 'gray',
     fontSize: 40,
     textAlign: 'right',
     textAlignVertical: 'bottom',
   },
+  description: {
+    flex: 1,
+    color: 'white',
+    backgroundColor: 'red',
+    fontSize: 40,
+    textAlign: 'right',
+    textAlignVertical: 'bottom',
+  },
   keypad: {
-    flex: 3,
+    flex: 4,
   }
 });
-
-const getButtons = (enterConstant, enterFloatingPoint, binaryOp, clear) => [
-  [
-    { value: '--', action: () => {} },
-    { value: '---', action: () => {} },
-    { value: '----', action: () => {} },
-    { value: '.', action: enterFloatingPoint },
-  ],
-  [
-    { value: '+', action: binaryOp },
-    { value: 7, action: enterConstant },
-    { value: 8, action: enterConstant },
-    { value: 9, action: enterConstant },
-  ],
-  [
-    { value: '-', action: binaryOp },
-    { value: 4, action: enterConstant },
-    { value: 5, action: enterConstant },
-    { value: 6, action: enterConstant },
-  ],
-  [
-    { value: '*', action: binaryOp },
-    { value: 1, action: enterConstant },
-    { value: 2, action: enterConstant },
-    { value: 3, action: enterConstant },
-  ],
-  [
-    { value: '/', action: binaryOp },
-    { value: 'C', action: clear },
-    { value: '0', action: enterConstant },
-    { value: '=', action: binaryOp },
-  ],
-];
