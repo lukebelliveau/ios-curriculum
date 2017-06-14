@@ -56,12 +56,12 @@ export default class App extends React.Component {
   unaryOperation(operator) {
     this.setState((prevState) => {
       const newDescription = `${operator}(${prevState.lastClause})`;
-      return ({
+      return {
         displayText: unaryOperations[operator](parseFloat(prevState.displayText)),
         description: newDescription,
         lastClause: newDescription,
         userIsTyping: false,
-      })
+      }
     })
   }
 
@@ -79,17 +79,17 @@ export default class App extends React.Component {
   }
 
   computeResult() {
-    if(!(this.state.pendingBinaryOperation)) return;
-    this.setState((prevState) => {
-      const newDescription = prevState.description + prevState.lastClause;
-      return ({
-        displayText: prevState.pendingBinaryOperation(parseFloat(prevState.displayText)),
-        description: newDescription,
-        lastClause: newDescription,
-        pendingBinaryOperation: null,
-        userIsTyping: false,
-      })
-    });
+    if(this.state.pendingBinaryOperation)
+      this.setState((prevState) => {
+        const newDescription = prevState.description + prevState.lastClause;
+        return {
+          displayText: prevState.pendingBinaryOperation(parseFloat(prevState.displayText)),
+          description: newDescription,
+          lastClause: newDescription,
+          pendingBinaryOperation: null,
+          userIsTyping: false,
+        }
+      });
   }
 
   render() {
