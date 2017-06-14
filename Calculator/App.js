@@ -26,8 +26,9 @@ export default class App extends React.Component {
     this.unaryOperation = this.unaryOperation.bind(this);
     this.enterFloatingPoint = this.enterFloatingPoint.bind(this);
     this.clear = this.clear.bind(this);
+    this.computeResult = this.computeResult.bind(this);
 
-    this.calculatorButtons = getButtons(this.enterConstant, this.enterFloatingPoint, this.unaryOperation, this.binaryOperation, this.clear)
+    this.calculatorButtons = getButtons(this.enterConstant, this.enterFloatingPoint, this.unaryOperation, this.binaryOperation, this.computeResult, this.clear)
   }
 
   clear() {
@@ -65,39 +66,30 @@ export default class App extends React.Component {
   }
 
   binaryOperation(operator) {
-    this.setState({
-      isFloatingPoint: false,
+    this.setState((prevState) => {
+      const valueOfInput = parseFloat(prevState.displayText);
+      return {
+        pendingBinaryOperation: (op2) => binaryOperations[operator](valueOfInput, op2),
+        accumulator: valueOfInput,
+        displayText: '',
+        description: prevState.lastClause + operator,
+        isFloatingPoint: false,
+      }
     });
-    switch(operator) {
-      case '+':
-      case '-':
-      case '*':
-      case '/':
-      case '^':
-        this.setState((prevState) => {
-          const valueOfInput = parseFloat(prevState.displayText);
-          return {
-            pendingBinaryOperation: (op2) => binaryOperations[operator](valueOfInput, op2),
-            accumulator: valueOfInput,
-            displayText: '',
-            description: prevState.lastClause + operator,
-          }
-        });
-        break;
-      case '=':
-        if(!(this.state.pendingBinaryOperation)) break;
-        this.setState((prevState) => {
-          const newDescription = prevState.description + prevState.lastClause;
-          return ({
-            displayText: prevState.pendingBinaryOperation(parseFloat(prevState.displayText)),
-            description: newDescription,
-            lastClause: newDescription,
-            pendingBinaryOperation: null,
-            userIsTyping: false,
-          })
-        });
-        break;
-    }
+  }
+
+  computeResult() {
+    if(!(this.state.pendingBinaryOperation)) return;
+    this.setState((prevState) => {
+      const newDescription = prevState.description + prevState.lastClause;
+      return ({
+        displayText: prevState.pendingBinaryOperation(parseFloat(prevState.displayText)),
+        description: newDescription,
+        lastClause: newDescription,
+        pendingBinaryOperation: null,
+        userIsTyping: false,
+      })
+    });
   }
 
   render() {

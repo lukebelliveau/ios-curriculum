@@ -25,8 +25,6 @@ const CalculatorButton = ({ buttonData }) => (
   </View>
 );
 
-// const computeButtonColor = value => isNaN(parseInt(value)) ? 'orangered' : 'lightslategrey';
-
 const computeButtonColor = value => {
   switch(value) {
     case 'sin':
