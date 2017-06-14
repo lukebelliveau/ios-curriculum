@@ -1,18 +1,18 @@
 import React from 'react';
 import { Text } from 'react-native';
 
-const descriptionSuffix = (isOperationPending) => {
-  return isOperationPending ? '...' : '=';
-};
+export default ({ description, isOperationPending }) =>
+  <Text style={ styles }>{ formatDescription(description, isOperationPending) }</Text>
 
-export default ({ description, isOperationPending }) => (
-  <Text style={ styles }>{ description + descriptionSuffix(isOperationPending) }</Text>
-)
+const formatDescription = (description, isOperationPending) =>
+  description === ''
+    ? null
+    : description + (isOperationPending ? '...' : '=');
 
 const styles = {
   flex: 1,
     color: 'white',
-    backgroundColor: 'red',
+    backgroundColor: 'lightgray',
     fontSize: 40,
     textAlign: 'right',
     textAlignVertical: 'bottom',

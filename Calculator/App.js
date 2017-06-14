@@ -4,6 +4,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import Keypad from './src/Keypad';
 import Description from './src/Description';
 import getButtons from './src/getButtons';
+import { unaryOperations, binaryOperations } from './src/operations';
 
 const initialState = {
   displayText: '',
@@ -109,17 +110,6 @@ export default class App extends React.Component {
   }
 };
 
-const unaryOperations = {
-  '√': (op) => Math.sqrt(op),
-};
-
-const binaryOperations = {
-  '+': (op1, op2) => op1 + op2,
-  '-': (op1, op2) => op1 - op2,
-  '*': (op1, op2) => op1 * op2,
-  '/': (op1, op2) => op1 / op2
-};
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -128,7 +118,7 @@ const styles = StyleSheet.create({
     flex: 2,
     color: 'white',
     backgroundColor: 'gray',
-    fontSize: 40,
+    fontSize: 80,
     textAlign: 'right',
     textAlignVertical: 'bottom',
   },
