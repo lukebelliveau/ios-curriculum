@@ -1,8 +1,8 @@
-const getButtons =  (enterConstant, enterFloatingPoint, binaryOp, clear) => [
+const getButtons =  (enterConstant, enterFloatingPoint, unaryOp, binaryOp, clear) => [
   [
     { value: '--', action: () => {} },
     { value: '---', action: () => {} },
-    { value: '----', action: () => {} },
+    { value: '√', action: unaryOp },
     { value: '.', action: enterFloatingPoint },
   ],
   [

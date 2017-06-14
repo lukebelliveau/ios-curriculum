@@ -8,6 +8,7 @@ const initialState = {
   displayText: '',
   description: '',
   lastClause: '',
+  userIsTyping: false,
   pendingBinaryOperation: null,
   accumulator: 0,
   isFloatingPoint: false,
@@ -24,10 +25,11 @@ export default class App extends React.Component {
 
     this.enterConstant = this.enterConstant.bind(this);
     this.binaryOperation = this.binaryOperation.bind(this);
+    this.unaryOperation = this.unaryOperation.bind(this);
     this.enterFloatingPoint = this.enterFloatingPoint.bind(this);
     this.clear = this.clear.bind(this);
 
-    this.calculatorButtons = getButtons(this.enterConstant, this.enterFloatingPoint, this.binaryOperation, this.clear)
+    this.calculatorButtons = getButtons(this.enterConstant, this.enterFloatingPoint, this.unaryOperation, this.binaryOperation, this.clear)
   }
 
   clear() {
@@ -45,10 +47,23 @@ export default class App extends React.Component {
 
   enterConstant(constant) {
     this.setState((prevState) => ({
-      displayText: prevState.displayText + constant.toString(),
+      displayText: prevState.userIsTyping ? prevState.displayText + constant.toString() : constant.toString(),
+      description: prevState.userIsTyping ? prevState.description : '',
       lastClause: constant.toString(),
-      // description: prevState.description + constant.toString(),
+      userIsTyping: true,
     }))
+  }
+
+  unaryOperation(operator) {
+    this.setState((prevState) => {
+      const newDescription = `√(${prevState.lastClause})`;
+      return ({
+        displayText: Math.sqrt(parseFloat(prevState.displayText)),
+        description: newDescription,
+        lastClause: newDescription,
+        userIsTyping: false,
+      })
+    })
   }
 
   binaryOperation(operator) {
@@ -63,7 +78,7 @@ export default class App extends React.Component {
         this.setState((prevState) => {
           const valueOfInput = parseFloat(prevState.displayText);
           return {
-            pendingBinaryOperation: (op2) => operations[operator](valueOfInput, op2),
+            pendingBinaryOperation: (op2) => binaryOperations[operator](valueOfInput, op2),
             accumulator: valueOfInput,
             displayText: '',
             description: prevState.lastClause + operator,
@@ -79,6 +94,7 @@ export default class App extends React.Component {
             description: newDescription,
             lastClause: newDescription,
             pendingBinaryOperation: null,
+            userIsTyping: false,
           })
         });
         break;
@@ -96,7 +112,11 @@ export default class App extends React.Component {
   }
 };
 
-const operations = {
+const unaryOperations = {
+  '√': (op) => Math.sqrt(op),
+};
+
+const binaryOperations = {
   '+': (op1, op2) => op1 + op2,
   '-': (op1, op2) => op1 - op2,
   '*': (op1, op2) => op1 * op2,
