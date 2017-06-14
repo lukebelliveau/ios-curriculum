@@ -73,6 +73,7 @@ export default class App extends React.Component {
       case '-':
       case '*':
       case '/':
+      case '^':
         this.setState((prevState) => {
           const valueOfInput = parseFloat(prevState.displayText);
           return {

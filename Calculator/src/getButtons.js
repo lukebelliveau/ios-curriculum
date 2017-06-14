@@ -1,8 +1,8 @@
 const getButtons =  (enterConstant, enterFloatingPoint, unaryOp, binaryOp, clear) => [
   [
     { value: 'sin', action: unaryOp },
-    { value: '--', action: () => {} },
-    { value: '---', action: () => {} },
+    { value: '/', action: binaryOp },
+    { value: '^', action: binaryOp },
     { value: '√', action: unaryOp },
     { value: 'C', action: clear },
   ],
@@ -29,7 +29,7 @@ const getButtons =  (enterConstant, enterFloatingPoint, unaryOp, binaryOp, clear
   ],
   [
     { value: 'log10', action: unaryOp },
-    { value: '/', action: binaryOp },
+    { value: 'π', action: () => enterConstant(Math.PI) },
     { value: '.', action: enterFloatingPoint },
     { value: '0', action: enterConstant },
     { value: '=', action: binaryOp },

@@ -11,5 +11,6 @@ export const binaryOperations = {
   '+': (op1, op2) => op1 + op2,
   '-': (op1, op2) => op1 - op2,
   '*': (op1, op2) => op1 * op2,
-  '/': (op1, op2) => op1 / op2
+  '/': (op1, op2) => op1 / op2,
+  '^': (op1, op2) => Math.pow(op1, op2)
 };

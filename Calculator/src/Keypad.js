@@ -25,8 +25,22 @@ const CalculatorButton = ({ buttonData }) => (
   </View>
 );
 
-const computeButtonColor = value => isNaN(parseInt(value)) ? 'orangered' : 'lightslategrey';
+// const computeButtonColor = value => isNaN(parseInt(value)) ? 'orangered' : 'lightslategrey';
 
+const computeButtonColor = value => {
+  switch(value) {
+    case 'sin':
+    case 'cos':
+    case 'tan':
+    case 'ln':
+    case 'log10':
+      return 'orange';
+    case 'C':
+      return 'darkorange';
+    default:
+      return isNaN(parseInt(value)) ? 'orangered' : 'lightslategrey'
+  }
+};
 const styles = StyleSheet.create({
   container: {
   },
