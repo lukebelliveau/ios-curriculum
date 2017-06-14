@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import Keypad from './src/Keypad';
+import Description from './src/Description';
 import getButtons from './src/getButtons';
 
 const initialState = {
@@ -12,10 +13,6 @@ const initialState = {
   pendingBinaryOperation: null,
   accumulator: 0,
   isFloatingPoint: false,
-};
-
-const descriptionSuffix = (pendingBinaryOperation) => {
-  return pendingBinaryOperation === null ? '=' : '...';
 };
 
 export default class App extends React.Component {
@@ -56,9 +53,9 @@ export default class App extends React.Component {
 
   unaryOperation(operator) {
     this.setState((prevState) => {
-      const newDescription = `√(${prevState.lastClause})`;
+      const newDescription = `${operator}(${prevState.lastClause})`;
       return ({
-        displayText: Math.sqrt(parseFloat(prevState.displayText)),
+        displayText: unaryOperations[operator](parseFloat(prevState.displayText)),
         description: newDescription,
         lastClause: newDescription,
         userIsTyping: false,
@@ -105,7 +102,7 @@ export default class App extends React.Component {
     return (
       <View style={ styles.container }>
         <Text style={ styles.main }>{ this.state.displayText }</Text>
-        <Text style={ styles.description }>{ this.state.description + descriptionSuffix(this.state.pendingBinaryOperation) }</Text>
+        <Description description={ this.state.description } isOperationPending={ this.state.pendingBinaryOperation !== null }/>
         <Keypad buttonGrid={ this.calculatorButtons } style={ styles.keypad } />
       </View>
     );
@@ -131,14 +128,6 @@ const styles = StyleSheet.create({
     flex: 2,
     color: 'white',
     backgroundColor: 'gray',
-    fontSize: 40,
-    textAlign: 'right',
-    textAlignVertical: 'bottom',
-  },
-  description: {
-    flex: 1,
-    color: 'white',
-    backgroundColor: 'red',
     fontSize: 40,
     textAlign: 'right',
     textAlignVertical: 'bottom',
