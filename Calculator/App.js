@@ -46,7 +46,7 @@ export default class App extends React.Component {
 
   enterConstant(constant) {
     this.setState((prevState) => ({
-      displayText: prevState.userIsTyping ? prevState.displayText + constant.toString() : constant.toString(),
+      displayText: (prevState.userIsTyping) ? prevState.displayText + constant.toString() : constant.toString(),
       description: prevState.userIsTyping ? prevState.description : '',
       lastClause: constant.toString(),
       userIsTyping: true,
@@ -58,7 +58,7 @@ export default class App extends React.Component {
       const newDescription = `${operator}(${prevState.lastClause})`;
       return {
         displayText: unaryOperations[operator](parseFloat(prevState.displayText)),
-        description: newDescription,
+        description: prevState.userIsTyping ? prevState.description + newDescription : newDescription,
         lastClause: newDescription,
         userIsTyping: false,
       }
@@ -74,17 +74,19 @@ export default class App extends React.Component {
         displayText: '',
         description: prevState.lastClause + operator,
         isFloatingPoint: false,
+        userIsTyping: true,
       }
     });
   }
 
   computeResult() {
+    console.log(this.state.userIsTyping);
     if(this.state.pendingBinaryOperation)
       this.setState((prevState) => {
         const newDescription = prevState.description + prevState.lastClause;
         return {
           displayText: prevState.pendingBinaryOperation(parseFloat(prevState.displayText)),
-          description: newDescription,
+          description: prevState.userIsTyping ? newDescription : prevState.description,
           lastClause: newDescription,
           pendingBinaryOperation: null,
           userIsTyping: false,
